@@ -1,200 +1,184 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-<title>SYSTEM BREACH</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL ACCESS - AREA RISERVATA</title>
+    <style>
+        /* Reset e impostazioni base dello schermo */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-<style>
-body {
-  margin: 0;
-  background: black;
-  overflow: hidden;
-  font-family: monospace;
-}
+        body {
+            background-color: #030303;
+            color: #00ff33;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            height: 100vh;
+            padding: 30px;
+            font-size: 16px;
+        }
 
-/* MATRIX */
-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
+        /* Effetto griglia/linee dei vecchi monitor CRT */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+            z-index: 5;
+            background-size: 100% 3px, 6px 100%;
+            pointer-events: none;
+        }
 
-/* GLITCH LAYERS */
-.glitch {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0,255,0,0.03),
-    rgba(255,0,0,0.03),
-    rgba(0,0,255,0.03)
-  );
-  animation: flicker 0.08s infinite;
-}
+        #terminal {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            position: relative;
+            z-index: 1;
+        }
 
-@keyframes flicker {
-  0% { transform: translate(1px,1px); }
-  25% { transform: translate(-1px,1px); }
-  50% { transform: translate(1px,-1px); }
-  75% { transform: translate(-1px,-1px); }
-  100% { transform: translate(1px,1px); }
-}
+        .line {
+            margin-bottom: 8px;
+            white-space: pre-wrap;
+            letter-spacing: 1px;
+        }
 
-/* TERMINAL */
-#terminal {
-  position: absolute;
-  top: 8%;
-  left: 5%;
-  width: 90%;
-  color: #00ff00;
-  font-size: 18px;
-  white-space: pre-line;
-}
+        /* STILE IN ROSSO PER SOFIA E DESIO */
+        .target-data {
+            color: #ff003c;
+            font-weight: bold;
+            text-shadow: 0 0 12px #ff003c, 0 0 5px #ff003c;
+        }
 
-/* ASCII SKULL */
-#skull {
-  position: absolute;
-  top: 55%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  color: #00ff00;
-  font-size: 14px;
-  line-height: 14px;
-  white-space: pre;
-  display: none;
-  text-shadow: 0 0 10px #00ff00;
-}
+        .alert-text {
+            color: #ffcc00;
+        }
 
-/* RED ALERT */
-#alert {
-  position: absolute;
-  bottom: 40px;
-  width: 100%;
-  text-align: center;
-  color: red;
-  font-size: 20px;
-  opacity: 0;
-}
+        .success-text {
+            color: #00ff33;
+            text-shadow: 0 0 8px #00ff33;
+        }
 
-/* FLASH */
-#flash {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: red;
-  opacity: 0;
-}
-</style>
+        /* Finestra centrale di compromissione totale */
+        #popup-allerta {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(15, 0, 5, 0.95);
+            border: 2px solid #ff003c;
+            padding: 40px;
+            text-align: center;
+            z-index: 10;
+            box-shadow: 0 0 40px rgba(255, 0, 60, 0.6);
+            width: 85%;
+            max-width: 550px;
+        }
+
+        #popup-allerta h1 {
+            color: #ff003c;
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            letter-spacing: 3px;
+            animation: lampeggio 0.6s infinite alternate;
+        }
+
+        #popup-allerta p {
+            color: #ffffff;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+
+        @keyframes lampeggio {
+            from { opacity: 1; }
+            to { opacity: 0.2; }
+        }
+
+        /* Pulizia estetica della barra di scorrimento */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #00ff33;
+        }
+    </style>
 </head>
-
 <body>
 
-<canvas id="c"></canvas>
-<div class="glitch"></div>
+    <div id="terminal"></div>
 
-<div id="terminal"></div>
+    <div id="popup-allerta">
+        <h1>ATTACCO COMPLETATO</h1>
+        <p>Infiltrazione eseguita nei nodi locali.</p>
+        <p>Soggetto Rintracciato: <span class="target-data">SOFIA</span></p>
+        <p>Area Geografica: <span class="target-data">DESIO</span></p>
+        <p style="color: #666; font-size: 0.8rem; margin-top: 30px;">[Stato della sessione: Connesso in remoto]</p>
+    </div>
 
-<pre id="skull">
-      ███████████
-   ███  ███████  ███
-  ██   █  ██  █   ██
- ██    █      █    ██
- ██    ████████    ██
-  ██              ██
-   ███          ███
-      ███████████
-</pre>
+    <script>
+        const terminal = document.getElementById('terminal');
+        const popupAllerta = document.getElementById('popup-allerta');
 
-<div id="alert">SISTEMA COMPROMESSO — SOFIA — DESIO</div>
-<div id="flash"></div>
+        // Sequenza dei messaggi simulati
+        const logAttacco = [
+            { testo: "Inizializzazione protocollo di exploit remoto...", attesa: 400 },
+            { testo: "Connessione alla rete anonima TOR superata... 3 nodi attivi.", attesa: 600 },
+            { testo: "Scansione sottorete locale in corso (provincia di Monza e Brianza)...", attesa: 900 },
+            { testo: "Testing vulnerabilità sui nodi regionali...", attesa: 500 },
+            { testo: "Bypassing protocollo di sicurezza WPA3... OK", attesa: 400 },
+            { testo: "Iniezione pacchetti di overlay nel server centrale...", attesa: 700 },
+            { testo: "Intercettazione pacchetti handshake... Decrittazione in corso.", attesa: 800 },
+            { testo: "-------------------------------------------------------------", attesa: 200 },
+            { testo: "[!] NOTIFICA: Trovata corrispondenza esatta nel database locale.", attesa: 500, classe: "alert-text" },
+            { testo: "[*] TARGET IDENTIFICATO: <span class='target-data'>SOFIA</span>", attesa: 1000 },
+            { testo: "[*] LOCALIZZAZIONE NODO: <span class='target-data'>DESIO</span>", attesa: 1000 },
+            { testo: "-------------------------------------------------------------", attesa: 200 },
+            { testo: "Apertura backdoor sulla porta remota 8080...", attesa: 600 },
+            { testo: "Caricamento script di tracciamento nella cache del browser...", attesa: 700 },
+            { testo: "Sincronizzazione dati in corso: [████████████████████] 100%", attesa: 1200, classe: "success-text" },
+            { testo: "Download dei file di configurazione terminato con successo.", attesa: 400 },
+            { testo: "Rimozione file temporanei e tracce d'accesso (clearev)... PRONTO.", attesa: 600 },
+            { testo: "Generazione resoconto finale dell'intrusione..." , attesa: 1100 }
+        ];
 
-<audio id="audio" loop>
-  <source src="https://actions.google.com/sounds/v1/horror/ambient_horror_whispers.ogg" type="audio/ogg">
-</audio>
+        let rigaCorrente = 0;
 
-<script>
+        function avviaSimulazione() {
+            if (rigaCorrente < logAttacco.length) {
+                const datiRiga = logAttacco[rigaCorrente];
+                const elementoRiga = document.createElement('div');
+                elementoRiga.className = 'line';
+                
+                if (datiRiga.classe) {
+                    elementoRiga.classList.add(datiRiga.classe);
+                }
+                
+                // Aggiunge l'orario reale all'inizio di ogni riga per renderlo vero
+                const orario = new Date().toLocaleTimeString();
+                elementoRiga.innerHTML = `[${orario}] ${datiRiga.testo}`;
+                
+                terminal.appendChild(elementoRiga);
+                terminal.scrollTop = terminal.scrollHeight; // Scorre automaticamente verso il basso
+                
+                rigaCorrente++;
+                setTimeout(avviaSimulazione, datiRiga.attesa);
+            } else {
+                // Al termine dello script, sfoca lo sfondo e mostra il box rosso
+                setTimeout(() => {
+                    terminal.style.filter = "blur(5px)";
+                    popupAllerta.style.display = "block";
+                }, 1200);
+            }
+        }
 
-/* MATRIX */
-const c = document.getElementById("c");
-const ctx = c.getContext("2d");
-
-c.width = window.innerWidth;
-c.height = window.innerHeight;
-
-const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ☠☠☠";
-const fontSize = 16;
-const columns = c.width / fontSize;
-const drops = Array(Math.floor(columns)).fill(1);
-
-function draw() {
-  ctx.fillStyle = "rgba(0,0,0,0.07)";
-  ctx.fillRect(0,0,c.width,c.height);
-
-  ctx.fillStyle = "#00ff00";
-  ctx.font = fontSize + "px monospace";
-
-  for (let i = 0; i < drops.length; i++) {
-    const text = letters[Math.floor(Math.random()*letters.length)];
-    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-
-    if (drops[i]*fontSize > c.height && Math.random() > 0.975)
-      drops[i] = 0;
-
-    drops[i]++;
-  }
-}
-setInterval(draw, 18);
-
-/* TERMINAL HACK SIM */
-const terminal = document.getElementById("terminal");
-
-const lines = [
-"[SYSTEM] boot sequence started...",
-"[SCAN] device detected",
-"[TRACE] location found: DESIO",
-"[USER] identity: SOFIA",
-"[WARNING] firewall bypassed",
-"[ACCESS] root privileges granted",
-"[UPLOAD] monitoring active",
-"[STATUS] SYSTEM COMPROMISED"
-];
-
-let i = 0;
-
-function type() {
-  if (i < lines.length) {
-    terminal.innerHTML += lines[i] + "\\n";
-    i++;
-    setTimeout(type, 1200);
-  }
-}
-
-setTimeout(type, 1000);
-
-/* HORROR SEQUENCE */
-setTimeout(() => {
-
-  document.getElementById("skull").style.display = "block";
-  document.getElementById("alert").style.opacity = 1;
-
-  const audio = document.getElementById("audio");
-  audio.volume = 1;
-  audio.play().catch(()=>{});
-
-  setInterval(() => {
-    document.getElementById("flash").style.opacity =
-      Math.random() > 0.8 ? 1 : 0;
-  }, 70);
-
-}, 9000);
-
-/* SCREEN SHAKE */
-setInterval(() => {
-  document.body.style.transform =
-    `translate(${Math.random()*3}px,${Math.random()*3}px)`;
-}, 40);
-
-</script>
-
+        // Avvia la simulazione 1 secondo dopo l'apertura della pagina
+        setTimeout(avviaSimulazione, 1000);
+    </script>
 </body>
 </html>
