@@ -48,7 +48,7 @@
             letter-spacing: 1px;
         }
 
-        /* STILE ROSSO LUMINOSO PER SOFIA E DESIO */
+        /* STILE ROSSO LUMINOSO PER I DATI RICHIESTI */
         .target-data {
             color: #ff003c;
             font-weight: bold;
@@ -78,7 +78,7 @@
             z-index: 10;
             box-shadow: 0 0 40px rgba(255, 0, 60, 0.6);
             width: 85%;
-            max-width: 550px;
+            max-width: 600px;
         }
 
         #popup-allerta h1 {
@@ -116,8 +116,9 @@
     <div id="popup-allerta">
         <h1>ATTACCO COMPLETATO</h1>
         <p>Infiltrazione eseguita nei nodi locali.</p>
-        <p>Soggetto Rintracciato: <span class="target-data">SOFIA</span></p>
-        <p>Area Geografica: <span class="target-data">DESIO</span></p>
+        <p>Soggetto Rintracciato: <span class="target-data">OLGA MINO NORIEGA PATRICIA</span></p>
+        <p>Luogo di Nascita: <span class="target-data">ECUADOR</span></p>
+        <p>Domicilio Attuale: <span class="target-data">DESIO</span></p>
         <p style="color: #666; font-size: 0.8rem; margin-top: 30px;">[Stato della sessione: Connesso in remoto]</p>
     </div>
 
@@ -136,8 +137,9 @@
             { testo: "Intercettazione pacchetti handshake... Decrittazione in corso.", attesa: 800 },
             { testo: "-------------------------------------------------------------", attesa: 200 },
             { testo: "[!] NOTIFICA: Trovata corrispondenza esatta nel database locale.", attesa: 500, classe: "alert-text" },
-            { testo: "[*] TARGET IDENTIFICATO: <span class='target-data'>SOFIA</span>", attesa: 1000 },
-            { testo: "[*] LOCALIZZAZIONE NODO: <span class='target-data'>DESIO</span>", attesa: 1000 },
+            { testo: "[*] TARGET IDENTIFICATO: <span class='target-data'>OLGA MINO NORIEGA PATRICIA</span>", attesa: 1000 },
+            { testo: "[*] ORIGINE REGISTRATA: <span class='target-data'>ECUADOR</span>", attesa: 1000 },
+            { testo: "[*] LOCALIZZAZIONE ATTUALE: <span class='target-data'>DESIO</span>", attesa: 1000 },
             { testo: "-------------------------------------------------------------", attesa: 200 },
             { testo: "Apertura backdoor sulla porta remota 8080...", attesa: 600 },
             { testo: "Caricamento script di tracciamento nella cache del browser...", attesa: 700 },
