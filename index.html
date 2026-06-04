@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TERMINAL ACCESS - AREA RISERVATA</title>
+    <title>TERMINAL ACCESS - SYSTEM STATUS</title>
     <style>
-        /* Reset e impostazioni base dello schermo */
+        /* Impostazioni generali dello schermo stile Hacker */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -22,7 +22,7 @@
             font-size: 16px;
         }
 
-        /* Effetto griglia/linee dei vecchi monitor CRT */
+        /* Linee orizzontali per simulare un vecchio monitor CRT */
         body::before {
             content: " ";
             display: block;
@@ -48,7 +48,7 @@
             letter-spacing: 1px;
         }
 
-        /* STILE IN ROSSO PER SOFIA E DESIO */
+        /* STILE ROSSO LUMINOSO PER SOFIA E DESIO */
         .target-data {
             color: #ff003c;
             font-weight: bold;
@@ -64,7 +64,7 @@
             text-shadow: 0 0 8px #00ff33;
         }
 
-        /* Finestra centrale di compromissione totale */
+        /* Schermata di avviso centrale che appare alla fine */
         #popup-allerta {
             display: none;
             position: fixed;
@@ -100,7 +100,7 @@
             to { opacity: 0.2; }
         }
 
-        /* Pulizia estetica della barra di scorrimento */
+        /* Nasconde la barra di scorrimento standard */
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -125,7 +125,7 @@
         const terminal = document.getElementById('terminal');
         const popupAllerta = document.getElementById('popup-allerta');
 
-        // Sequenza dei messaggi simulati
+        // Sequenza dei messaggi della finta violazione
         const logAttacco = [
             { testo: "Inizializzazione protocollo di exploit remoto...", attesa: 400 },
             { testo: "Connessione alla rete anonima TOR superata... 3 nodi attivi.", attesa: 600 },
@@ -159,17 +159,17 @@
                     elementoRiga.classList.add(datiRiga.classe);
                 }
                 
-                // Aggiunge l'orario reale all'inizio di ogni riga per renderlo vero
+                // Genera l'orario reale del computer corrente
                 const orario = new Date().toLocaleTimeString();
                 elementoRiga.innerHTML = `[${orario}] ${datiRiga.testo}`;
                 
                 terminal.appendChild(elementoRiga);
-                terminal.scrollTop = terminal.scrollHeight; // Scorre automaticamente verso il basso
+                terminal.scrollTop = terminal.scrollHeight;
                 
                 rigaCorrente++;
                 setTimeout(avviaSimulazione, datiRiga.attesa);
             } else {
-                // Al termine dello script, sfoca lo sfondo e mostra il box rosso
+                // Al termine, sfoca il terminale e attiva la schermata rossa
                 setTimeout(() => {
                     terminal.style.filter = "blur(5px)";
                     popupAllerta.style.display = "block";
@@ -177,7 +177,7 @@
             }
         }
 
-        // Avvia la simulazione 1 secondo dopo l'apertura della pagina
+        // Avvio automatico dopo 1 secondo
         setTimeout(avviaSimulazione, 1000);
     </script>
 </body>
