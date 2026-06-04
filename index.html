@@ -16,8 +16,6 @@ canvas {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1;
-  opacity: 0.8;
 }
 
 /* GLITCH LAYERS */
@@ -27,15 +25,14 @@ canvas {
   height: 100%;
   background: repeating-linear-gradient(
     0deg,
-    rgba(255,0,0,0.03),
     rgba(0,255,0,0.03),
+    rgba(255,0,0,0.03),
     rgba(0,0,255,0.03)
   );
-  animation: shake 0.08s infinite;
-  z-index: 2;
+  animation: flicker 0.08s infinite;
 }
 
-@keyframes shake {
+@keyframes flicker {
   0% { transform: translate(1px,1px); }
   25% { transform: translate(-1px,1px); }
   50% { transform: translate(1px,-1px); }
@@ -43,29 +40,40 @@ canvas {
   100% { transform: translate(1px,1px); }
 }
 
-/* TERMINAL TEXT */
+/* TERMINAL */
 #terminal {
   position: absolute;
-  top: 10%;
+  top: 8%;
   left: 5%;
   width: 90%;
   color: #00ff00;
   font-size: 18px;
-  z-index: 3;
   white-space: pre-line;
 }
 
-/* SKULL */
+/* ASCII SKULL */
 #skull {
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%,-50%);
-  font-size: 240px;
+  color: #00ff00;
+  font-size: 14px;
+  line-height: 14px;
+  white-space: pre;
   display: none;
-  z-index: 5;
-  color: white;
-  text-shadow: 0 0 30px red, 0 0 100px red;
+  text-shadow: 0 0 10px #00ff00;
+}
+
+/* RED ALERT */
+#alert {
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  text-align: center;
+  color: red;
+  font-size: 20px;
+  opacity: 0;
 }
 
 /* FLASH */
@@ -75,7 +83,6 @@ canvas {
   height: 100%;
   background: red;
   opacity: 0;
-  z-index: 6;
 }
 </style>
 </head>
@@ -86,7 +93,19 @@ canvas {
 <div class="glitch"></div>
 
 <div id="terminal"></div>
-<div id="skull">💀</div>
+
+<pre id="skull">
+      ███████████
+   ███  ███████  ███
+  ██   █  ██  █   ██
+ ██    █      █    ██
+ ██    ████████    ██
+  ██              ██
+   ███          ███
+      ███████████
+</pre>
+
+<div id="alert">SISTEMA COMPROMESSO — SOFIA — DESIO</div>
 <div id="flash"></div>
 
 <audio id="audio" loop>
@@ -94,19 +113,21 @@ canvas {
 </audio>
 
 <script>
+
+/* MATRIX */
 const c = document.getElementById("c");
 const ctx = c.getContext("2d");
 
 c.width = window.innerWidth;
 c.height = window.innerHeight;
 
-const letters = "01☠☠☠☠☠☠☠☠☠☠☠";
+const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ☠☠☠";
 const fontSize = 16;
 const columns = c.width / fontSize;
 const drops = Array(Math.floor(columns)).fill(1);
 
 function draw() {
-  ctx.fillStyle = "rgba(0,0,0,0.06)";
+  ctx.fillStyle = "rgba(0,0,0,0.07)";
   ctx.fillRect(0,0,c.width,c.height);
 
   ctx.fillStyle = "#00ff00";
@@ -122,59 +143,56 @@ function draw() {
     drops[i]++;
   }
 }
-
 setInterval(draw, 18);
 
-// TERMINAL EFFECT
+/* TERMINAL HACK SIM */
 const terminal = document.getElementById("terminal");
 
 const lines = [
-"booting system...",
-"checking device integrity...",
-"scan complete: UNKNOWN DEVICE",
-"location trace: ACTIVE",
-"identity found: SOFIA",
-"warning: unauthorized access detected",
-"injecting monitoring module...",
-"system override: SUCCESS",
-"YOU ARE BEING WATCHED..."
+"[SYSTEM] boot sequence started...",
+"[SCAN] device detected",
+"[TRACE] location found: DESIO",
+"[USER] identity: SOFIA",
+"[WARNING] firewall bypassed",
+"[ACCESS] root privileges granted",
+"[UPLOAD] monitoring active",
+"[STATUS] SYSTEM COMPROMISED"
 ];
 
 let i = 0;
 
-function typeLine() {
+function type() {
   if (i < lines.length) {
     terminal.innerHTML += lines[i] + "\\n";
     i++;
-    setTimeout(typeLine, 1200);
+    setTimeout(type, 1200);
   }
 }
 
-setTimeout(typeLine, 1000);
+setTimeout(type, 1000);
 
-// HORROR SEQUENCE
+/* HORROR SEQUENCE */
 setTimeout(() => {
 
-  const skull = document.getElementById("skull");
-  const flash = document.getElementById("flash");
+  document.getElementById("skull").style.display = "block";
+  document.getElementById("alert").style.opacity = 1;
+
   const audio = document.getElementById("audio");
-
-  skull.style.display = "block";
-
   audio.volume = 1;
   audio.play().catch(()=>{});
 
   setInterval(() => {
-    flash.style.opacity = Math.random() > 0.8 ? 1 : 0;
-  }, 60);
+    document.getElementById("flash").style.opacity =
+      Math.random() > 0.8 ? 1 : 0;
+  }, 70);
 
 }, 9000);
 
-// SCREEN SHAKE
+/* SCREEN SHAKE */
 setInterval(() => {
   document.body.style.transform =
-    `translate(${Math.random()*4}px,${Math.random()*4}px)`;
-}, 30);
+    `translate(${Math.random()*3}px,${Math.random()*3}px)`;
+}, 40);
 
 </script>
 
