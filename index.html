@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATRIX CORE - LIVE MONITORING SYSTEM</title>
+    <title>LOVE SYSTEM - BLUE MATRIX SESSION</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,8 +12,8 @@
         }
 
         body {
-            background-color: #020202;
-            color: #00ff33;
+            background-color: #00040a; /* Sfondo nero con riflesso blu notte profondissimo */
+            color: #00a2ff; /* Testo principale in Blu Ciano Hacker */
             font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
             height: 100vh;
@@ -21,19 +21,19 @@
             font-size: 14px;
         }
 
-        /* Effetto schermo CRT / Scanner Vintage */
+        /* Effetto schermo CRT con linee di scansione virate sul blu/azzurro */
         body::before {
             content: " ";
             display: block;
             position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background: linear-gradient(rgba(10, 16, 30, 0) 50%, rgba(0, 0, 0, 0.4) 50%), linear-gradient(90deg, rgba(0, 162, 255, 0.04), rgba(255, 0, 60, 0.02), rgba(255, 255, 255, 0.03));
             z-index: 10;
             background-size: 100% 3px, 3px 100%;
             pointer-events: none;
         }
 
-        /* Layout a due colonne stile centrale operativa */
+        /* Layout flessibile a due colonne */
         #main-container {
             display: flex;
             width: 100%;
@@ -41,25 +41,25 @@
             gap: 20px;
         }
 
-        /* Colonna sinistra: Log scorrimento infinito */
+        /* Colonna sinistra: Log scorrimento infinito a tema Blu e Bianco */
         #terminal-panel {
-            flex: 1.3;
+            flex: 1.2;
             height: 100%;
-            border: 1px solid #00ff33;
+            border: 1px solid #00a2ff; /* Bordo Blu */
             padding: 15px;
-            background-color: rgba(0, 5, 0, 0.9);
+            background-color: rgba(0, 8, 20, 0.95); /* Interno blu scuro cyberpunk */
             overflow-y: auto;
-            box-shadow: inset 0 0 15px rgba(0, 255, 51, 0.2);
+            box-shadow: inset 0 0 20px rgba(0, 162, 255, 0.2);
         }
 
-        /* Colonna destra: Quadro riassuntivo del bersaglio */
+        /* Colonna destra: Quadro riassuntivo permanente dedicato a voi (Rosso e Bianco su Blu) */
         #profile-panel {
             flex: 1;
             height: 100%;
-            border: 1px solid #ff003c;
+            border: 2px solid #ff003c; /* Bordo Rosso Neon */
             padding: 20px;
-            background-color: rgba(10, 0, 2, 0.9);
-            box-shadow: 0 0 25px rgba(255, 0, 60, 0.3), inset 0 0 15px rgba(255, 0, 60, 0.1);
+            background-color: rgba(0, 6, 15, 0.95);
+            box-shadow: 0 0 30px rgba(0, 162, 255, 0.3), inset 0 0 15px rgba(255, 0, 60, 0.15);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -73,93 +73,117 @@
         }
 
         .header-title {
-            color: #ff003c;
+            color: #ffffff; /* Bianco */
             font-weight: bold;
             text-align: center;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px dashed #ff003c;
-            animation: pulse 1s infinite alternate;
+            border-bottom: 1px dashed #00a2ff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
         }
 
         .profile-row {
-            margin-bottom: 12px;
-            font-size: 1.05rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding-bottom: 5px;
+            margin-bottom: 18px;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(0, 162, 255, 0.1);
+            padding-bottom: 8px;
         }
 
         .label {
-            color: #ffffff;
+            color: #00a2ff; /* Blu */
             font-weight: bold;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
         }
 
-        /* Dati caldi evidenziati in rosso neon */
+        /* Scritte e Cuori in Rosso Neon Luminoso */
         .target-data {
             color: #ff003c;
             font-weight: bold;
-            text-shadow: 0 0 10px #ff003c, 0 0 3px #ff003c;
+            text-shadow: 0 0 12px #ff003c, 0 0 4px #ff003c;
         }
 
-        .alert-text { color: #ffcc00; }
-        .success-text { color: #00ff33; }
-        .dim-text { color: #006611; }
+        /* Testo Bianco per i complimenti e risalti */
+        .white-text { 
+            color: #ffffff; 
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+        }
+        
+        .blue-text { color: #00a2ff; }
+        .dim-blue { color: #005588; } /* Blu attenuato per i timestamp dell'orologio */
+
+        .heart-ascii {
+            color: #ff003c; /* Cuore centrale Rosso */
+            font-family: monospace;
+            white-space: pre;
+            line-height: 1.2;
+            font-size: 11px;
+            text-shadow: 0 0 10px #ff003c;
+            margin: 15px 0;
+            text-align: center;
+            animation: pulse 0.8s infinite alternate;
+        }
 
         @keyframes pulse {
-            from { opacity: 1; text-shadow: 0 0 10px #ff003c; }
-            to { opacity: 0.6; text-shadow: 0 0 2px #ff003c; }
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(1.03); opacity: 0.7; }
         }
 
-        /* Personalizzazione barra di scorrimento */
+        /* Barra di scorrimento Blu */
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #00ff33; }
+        ::-webkit-scrollbar-thumb { background: #00a2ff; }
     </style>
 </head>
 <body>
 
     <div id="main-container">
         
-        <div id="terminal-panel" id="terminal">
+        <!-- PANNELLO 1: FLUSSO DI COMANDI INFINITO BLU/BIANCO/ROSSO -->
+        <div id="terminal-panel">
             <div id="log-wrapper"></div>
         </div>
 
+        <!-- PANNELLO 2: LA SCHEDA DEDICATA FISSA -->
         <div id="profile-panel">
             <div>
-                <div class="header-title">[ TARGET PROFILE IDENTIFIED ]</div>
+                <div class="header-title">[ BLUE MATRIX CONNECTION ]</div>
                 
-                <div class="profile-row">
-                    <span class="label">NOME COMPLETO:</span> <br>
-                    <span class="target-data">OLGA MINO NORIEGA PATRICIA</span>
+                <div class="profile-row" style="text-align: center; padding-top: 10px;">
+                    <!-- La vostra scritta speciale unita all'infinito -->
+                    <span class="target-data" style="font-size: 1.8rem; letter-spacing: 1px;">Oliver + Sofia = ∞</span>
                 </div>
                 
                 <div class="profile-row">
-                    <span class="label">DATA DI NASCITA:</span> <br>
-                    <span class="target-data">27 GIUGNO 1974 (ETÀ: 51 ANNI)</span>
+                    <span class="label">MESSAGGIO DI SISTEMA:</span> <br>
+                    <span class="white-text">Scusa amore mio, sei la mia principessa, la mia negra...</span>
                 </div>
 
                 <div class="profile-row">
-                    <span class="label">LUOGO DI ORIGINE:</span> <br>
-                    <span class="target-data">ECUADOR</span>
+                    <span class="label">ANALISI LOGICA DEL CUORE:</span> <br>
+                    <span class="white-text">Hai degli occhietti bellissimi che mi conquistano sempre il cuore. Ti amo.</span>
                 </div>
 
-                <div class="profile-row">
-                    <span class="label">DOMICILIO CORRENTE:</span> <br>
-                    <span class="target-data">DESIO (MB)</span>
-                </div>
-                
-                <div class="profile-row">
-                    <span class="label">TRATTI FISICI RILEVATI:</span> <br>
-                    <span class="target-data">CARNAGIONE MEDIO-SCURA</span> <br>
-                    <span class="target-data">CAPELLI CASTANO SCURI</span>
+                <!-- Il grande cuore fisso in codice ASCII Rosso -->
+                <div class="heart-ascii">
+  ***   ***
+ ***** *****
+*************
+ ***********
+  *********
+   *******
+    *****
+     ***
+      *
                 </div>
             </div>
 
             <div>
-                <div style="border-top: 1px dashed #ff003c; padding-top: 10px; color: #aaa; font-size: 0.8rem;">
-                    STATUS: <span class="success-text" style="animation: pulse 0.5s infinite alternate;">INTERCETTAZIONE ATTIVA</span><br>
-                    TRACCIAMENTO PACCHETTI: IN CORSO...
+                <div style="border-top: 1px dashed #00a2ff; padding-top: 10px; color: #005588; font-size: 0.8rem;">
+                    SINTONIA HARDWARE: <span class="white-text">CONNESSO ALL'INFINITO</span><br>
+                    COLORE PREFERITO DEL TARGET: <span class="blue-text" style="font-weight: bold; text-shadow: 0 0 5px #00a2ff;">BLU ATTIVO [100%]</span>
                 </div>
             </div>
         </div>
@@ -170,35 +194,37 @@
         const wrapper = document.getElementById('log-wrapper');
         const panel = document.getElementById('terminal-panel');
 
-        // Blocchi di stringhe iniziali (fase di boot)
+        // Sequenza di avvio iniziale con barre di caricamento azzurre e bianche
         const logIniziali = [
-            { t: "SYS_INIT: Caricamento moduli di attacco asincroni...", c: "dim-text" },
-            { t: "CONNECTING: Collegamento ai relay TOR decentralizzati...", c: "" },
-            { t: "SUCCESS: Tunnel stabilito su 4 nodi internazionali [ proxy chain attiva ]", c: "success-text" },
-            { t: "SCANNER: Avvio scansione pacchetti nell'area geografica della Brianza...", c: "" },
-            { t: "SEARCHING: Interrogazione anagrafiche locali e database di rete...", c: "" },
-            { t: "------------------------------------------------------------------------", c: "dim-text" },
-            { t: "[!] ALERT: Riscontro positivo rilevato sui server della subnet locale.", c: "alert-text" },
-            { t: "[*] IDENTITÀ ESTRATTA: OLGA MINO NORIEGA PATRICIA", c: "target-data" },
-            { t: "[*] COORDINATE AREA: DESIO (ITALIA) // ORIGINE: ECUADOR", c: "target-data" },
-            { t: "------------------------------------------------------------------------", c: "dim-text" },
-            { t: "EXPLOIT: Sincronizzazione dei dati strutturati e dei tratti somatici...", c: "" },
-            { t: "DATABASE: Aggancio record anagrafico - Nascita: 27/06/1974 (Età calcolata: 51)", c: "success-text" },
-            { t: "PHASE: Iniezione pacchetto invisibile per intercettazione continua...", c: "" }
+            { t: "INITIALIZING: Caricamento database sentimentale...", c: "dim-blue" },
+            { t: "CONNECTING: Collegamento ai nodi del cuore... Cerca: Sofia...", c: "blue-text" },
+            { t: "SYS_LOAD: [████░░░░░░░░░░░░░░░░] 20% - Lettura occhietti bellissimi...", c: "blue-text" },
+            { t: "SYS_LOAD: [████████████░░░░░░░░] 60% - Sincronizzazione scuse...", c: "blue-text" },
+            { t: "SYS_LOAD: [████████████████████] 100% - Sentimento pronto.", c: "white-text" },
+            { t: "SUCCESS: Connessione crittografata stabilita con la mia principessa.", c: "white-text" },
+            { t: "------------------------------------------------------------------------", c: "dim-blue" },
+            { t: "[!] NOTIFICA DI RETE: Trovata combinazione perfetta ed eterna nei nodi.", c: "white-text" },
+            { t: "[*] LOG ATTIVO: Oliver + Sofia = Infinito", c: "target-data" },
+            { t: "[*] DETTAGLIO: Ti amo immensamente, sei tutto il mio mondo.", c: "target-data" },
+            { t: "------------------------------------------------------------------------", c: "dim-blue" },
+            { t: "MONITORING: Avvio del flusso dati continuo a schermo...", c: "blue-text" }
         ];
 
-        // Frasi dinamiche ripetitive che verranno generate all'infinito per simulare il tracciamento reale
+        // Stringhe miste che scorreranno all'infinito (Blu, Bianco e Rosso)
         const frasiLoop = [
-            "Intercettato pacchetto dati da gateway locale... [Stato: OK]",
-            "Analisi traffico DNS in corso... Nessuna anomalia rilevata.",
-            "Sincronizzazione uplink con il server centrale eseguita.",
-            "Rilevato ping di controllo dal nodo periferico.",
-            "Aggiornamento della cache di tracciamento... [ Buffer pulito ]",
-            "Scansione porte di comunicazione secondarie aperta.",
-            "Verifica integrità della backdoor remota... Risposta in 12ms.",
-            "Filtraggio pacchetti HTTPS completato per l'host selezionato.",
-            "Generazione chiavi di sessione temporanee simmetriche...",
-            "Stato connessione: Stabile. Flusso dati continuo attivo."
+            "Ti amo sei la mia principessa...",
+            "Hai degli occhietti bellissimi che mi conquistano sempre il cuore. <3",
+            "Scusa amore mio, il mio sistema pulsa solo per te.",
+            "Sei la mia negra, il mio nodo centrale, tutto il mio cuore.",
+            "Oliver + Sofia = Infinito [Sessione sicura e permanente]",
+            " ❤️ ❤️ ❤️ Rilevato battito accelerato nel server centrale ❤️ ❤️ ❤️",
+            "Sincronizzazione baci in corso... [Stato: Inviati ad altissima velocità]",
+            "Ogni singola riga di questo codice blu parla solo di noi due.",
+            "Nessun firewall di questo mondo può fermare quello che provo per te.",
+            "Sei la mia costante fissa e preferita in tutti gli algoritmi.",
+            "Analisi degli occhietti di Sofia: Bellezza fuori da ogni parametro di sistema.",
+            "Flusso d'amore in streaming continuo... [Stato: Fluido / Infinito]",
+            " <3 <3 <3 <3 <3 ABBI CURA DEL MIO CUORE CONNESSO AL TUO <3 <3 <3 <3 <3"
         ];
 
         let index = 0;
@@ -209,12 +235,12 @@
             if (classe) riga.classList.add(classe);
 
             const ora = new Date().toLocaleTimeString();
-            riga.innerHTML = `<span class="dim-text">[${ora}]</span> ${testo}`;
+            riga.innerHTML = `<span class="dim-blue">[${ora}]</span> ${testo}`;
             
             wrapper.appendChild(riga);
             panel.scrollTop = panel.scrollHeight;
 
-            // Se i log superano le 100 righe, cancella la più vecchia per non bloccare il browser
+            // Rimuove i log vecchi per non appesantire lo schermo (rimane fluidissimo)
             if (wrapper.children.length > 100) {
                 wrapper.removeChild(wrapper.firstChild);
             }
@@ -222,26 +248,37 @@
 
         function eseguiTerminal() {
             if (index < logIniziali.length) {
-                // Esegue i log iniziali finti
+                // Caricamento iniziale
                 scriviRiga(logIniziali[index].t, logIniziali[index].c);
                 index++;
-                setTimeout(eseguiTerminal, Math.random() * 600 + 300);
+                setTimeout(eseguiTerminal, 600);
             } else {
-                // Una volta finiti i log iniziali, inizia a stampare stringhe all'infinito ad intervalli casuali
-                const fraseCasuale = frasiLoop[Math.floor(Math.random() * frasiLoop.length)];
+                // Scorrimento dati dinamico
+                const randomChance = Math.random();
                 
-                // Occasionalmente inserisce una notifica flash per rendere il tutto più dinamico
-                if (Math.random() > 0.8) {
-                    scriviRiga(`[LIVE MONITOR] Monitoraggio costante su nodo: OLGA MINO NORIEGA PATRICIA`, "alert-text");
+                if (randomChance > 0.85) {
+                    // Flash Rosso per far risaltare il vostro amore tra le scritte blu
+                    scriviRiga(`[EMERGENCY-HEART] Oliver + Sofia = INFINITO // Ti amo immensamente, scusa.`, "target-data");
+                } else if (randomChance > 0.5) {
+                    // Flash Bianco per i complimenti più luminosi
+                    const frasiBianche = [
+                        "Hai degli occhietti bellissimi che mi conquistano sempre il cuore.",
+                        "Scusa amore mio, sei la mia principessa, la mia negra.",
+                        "Ti amo. Ti amo. Ti amo. Ti amo. Ti amo."
+                    ];
+                    scriviRiga(frasiBianche[Math.floor(Math.random() * frasiBianche.length)], "white-text");
                 } else {
-                    scriviRiga(fraseCasuale, "dim-text");
+                    // Flusso blu standard stile hacker continuo
+                    const fraseCasuale = frasiLoop[Math.floor(Math.random() * frasiLoop.length)];
+                    scriviRiga(fraseCasuale, "blue-text");
                 }
 
-                setTimeout(eseguiTerminal, Math.random() * 1000 + 400);
+                // Velocità di aggiornamento fluida
+                setTimeout(eseguiTerminal, Math.random() * 700 + 350);
             }
         }
 
-        // Avvia il processo globale
+        // Avvio automatico
         setTimeout(eseguiTerminal, 500);
     </script>
 </body>
