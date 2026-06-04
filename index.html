@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>...</title>
+
+<style>
+body{
+    margin:0;
+    overflow:hidden;
+    background:white;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:monospace;
+}
+
+#start{
+    position:absolute;
+    inset:0;
+    background:white;
+}
+
+#scene{
+    display:none;
+    position:absolute;
+    inset:0;
+    background:black;
+}
+
+canvas{
+    position:absolute;
+    inset:0;
+}
+
+#skull{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    font-size:180px;
+    animation:float 1s infinite alternate;
+    z-index:10;
+}
+
+#warning{
+    position:absolute;
+    width:100%;
+    text-align:center;
+    top:15%;
+    color:#00ff00;
+    font-size:40px;
+    font-weight:bold;
+    text-shadow:0 0 20px #00ff00;
+    animation:blink .5s infinite;
+    z-index:10;
+}
+
+@keyframes blink{
+    50%{opacity:0;}
+}
+
+@keyframes float{
+    from{
+        transform:translate(-50%,-50%) scale(1);
+    }
+    to{
+        transform:translate(-50%,-55%) scale(1.08);
+    }
+}
+</style>
+</head>
+<body>
+
+<div id="start"></div>
+
+<div id="scene">
+    <canvas id="matrix"></canvas>
+
+    <div id="warning">
+        SISTEMA COMPROMESSO
+    </div>
+
+    <div id="skull">💀</div>
+</div>
+
+<script>
+document.getElementById("start").addEventListener("click", () => {
+    document.getElementById("start").style.display="none";
+    document.getElementById("scene").style.display="block";
+    startMatrix();
+});
+
+function startMatrix(){
+
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+const chars="01アイウエオカキクケコABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const size=18;
+const columns=Math.floor(canvas.width/size);
+
+const drops=[];
+
+for(let i=0;i<columns;i++){
+    drops[i]=1;
+}
+
+function draw(){
+
+    ctx.fillStyle="rgba(0,0,0,0.08)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle="#00ff00";
+    ctx.font=size+"px monospace";
+
+    for(let i=0;i<drops.length;i++){
+
+        const text=
+        chars[Math.floor(Math.random()*chars.length)];
+
+        ctx.fillText(text,i*size,drops[i]*size);
+
+        if(drops[i]*size>canvas.height &&
+           Math.random()>0.975){
+            drops[i]=0;
+        }
+
+        drops[i]++;
+    }
+
+    requestAnimationFrame(draw);
+}
+
+draw();
+}
+</script>
+
+</body>
+</html>
