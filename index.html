@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOVE SYSTEM - BLUE MATRIX SESSION</title>
+    <title>LOVE SYSTEM - HYPER MOTION BLUE MATRIX</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,16 +12,29 @@
         }
 
         body {
-            background-color: #00040a; /* Sfondo nero con riflesso blu notte profondissimo */
-            color: #00a2ff; /* Testo principale in Blu Ciano Hacker */
+            background-color: #00040a; 
+            color: #00a2ff; 
             font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
             height: 100vh;
             padding: 20px;
             font-size: 14px;
+            position: relative;
         }
 
-        /* Effetto schermo CRT con linee di scansione virate sul blu/azzurro */
+        /* 1. EFFETTO MATRIX DI CUORI IN SCONDO CHE CADONO */
+        #matrix-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.15; /* Sfondo leggero per non disturbare la lettura del testo */
+        }
+
+        /* Effetto vecchio monitor CRT Cyberpunk */
         body::before {
             content: " ";
             display: block;
@@ -33,32 +46,34 @@
             pointer-events: none;
         }
 
-        /* Layout flessibile a due colonne */
+        /* Layout principale sopra lo sfondo animato */
         #main-container {
             display: flex;
             width: 100%;
             height: 100%;
             gap: 20px;
+            position: relative;
+            z-index: 1;
         }
 
-        /* Colonna sinistra: Log scorrimento infinito a tema Blu e Bianco */
+        /* Colonna sinistra: Log scorrevoli */
         #terminal-panel {
-            flex: 1.2;
+            flex: 1.1;
             height: 100%;
-            border: 1px solid #00a2ff; /* Bordo Blu */
+            border: 1px solid #00a2ff; 
             padding: 15px;
-            background-color: rgba(0, 8, 20, 0.95); /* Interno blu scuro cyberpunk */
+            background-color: rgba(0, 8, 20, 0.85); /* Leggermente trasparente per far vedere lo sfondo */
             overflow-y: auto;
             box-shadow: inset 0 0 20px rgba(0, 162, 255, 0.2);
         }
 
-        /* Colonna destra: Quadro riassuntivo permanente dedicato a voi (Rosso e Bianco su Blu) */
+        /* Colonna destra: Quadro fisso col cuore pulsante */
         #profile-panel {
-            flex: 1;
+            flex: 1.2;
             height: 100%;
-            border: 2px solid #ff003c; /* Bordo Rosso Neon */
+            border: 2px solid #ff003c; 
             padding: 20px;
-            background-color: rgba(0, 6, 15, 0.95);
+            background-color: rgba(0, 6, 15, 0.85);
             box-shadow: 0 0 30px rgba(0, 162, 255, 0.3), inset 0 0 15px rgba(255, 0, 60, 0.15);
             display: flex;
             flex-direction: column;
@@ -66,14 +81,14 @@
         }
 
         .line {
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             white-space: pre-wrap;
             letter-spacing: 0.5px;
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
         .header-title {
-            color: #ffffff; /* Bianco */
+            color: #ffffff; 
             font-weight: bold;
             text-align: center;
             text-transform: uppercase;
@@ -85,27 +100,25 @@
         }
 
         .profile-row {
-            margin-bottom: 18px;
-            font-size: 1.1rem;
+            margin-bottom: 14px;
+            font-size: 1.05rem;
             border-bottom: 1px solid rgba(0, 162, 255, 0.1);
-            padding-bottom: 8px;
+            padding-bottom: 6px;
         }
 
         .label {
-            color: #00a2ff; /* Blu */
+            color: #00a2ff; 
             font-weight: bold;
             font-size: 0.85rem;
             letter-spacing: 1px;
         }
 
-        /* Scritte e Cuori in Rosso Neon Luminoso */
         .target-data {
             color: #ff003c;
             font-weight: bold;
             text-shadow: 0 0 12px #ff003c, 0 0 4px #ff003c;
         }
 
-        /* Testo Bianco per i complimenti e risalti */
         .white-text { 
             color: #ffffff; 
             font-weight: bold;
@@ -113,47 +126,62 @@
         }
         
         .blue-text { color: #00a2ff; }
-        .dim-blue { color: #005588; } /* Blu attenuato per i timestamp dell'orologio */
+        .dim-blue { color: #005588; } 
+
+        /* 2. EFFETTO BATTITO REALE PER IL GRANDE CUORE */
+        .heart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 240px;
+            margin: 10px 0;
+        }
 
         .heart-ascii {
-            color: #ff003c; /* Cuore centrale Rosso */
-            font-family: monospace;
+            color: #ff003c; 
+            font-family: 'Courier New', monospace;
             white-space: pre;
-            line-height: 1.2;
-            font-size: 11px;
-            text-shadow: 0 0 10px #ff003c;
-            margin: 15px 0;
-            text-align: center;
-            animation: pulse 0.8s infinite alternate;
+            line-height: 1.0;
+            font-size: 9px; 
+            text-shadow: 0 0 15px #ff003c, 0 0 5px #ff003c;
+            font-weight: bold;
+            transform-origin: center center;
+            /* Animazione realistica a doppio battito cardiaco */
+            animation: battitoCardiaco 1.2s infinite ease-in-out;
         }
 
-        @keyframes pulse {
-            from { transform: scale(1); opacity: 1; }
-            to { transform: scale(1.03); opacity: 0.7; }
+        @keyframes battitoCardiaco {
+            0% { transform: scale(0.95); }
+            15% { transform: scale(1.12); filter: brightness(1.3); }
+            30% { transform: scale(1.02); }
+            45% { transform: scale(1.18); filter: brightness(1.4); }
+            70% { transform: scale(0.95); }
+            100% { transform: scale(0.95); }
         }
 
-        /* Barra di scorrimento Blu */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #00a2ff; }
     </style>
 </head>
 <body>
 
+    <!-- Canvas per i cuoricini cadenti stile Matrix -->
+    <canvas id="matrix-bg"></canvas>
+
     <div id="main-container">
         
-        <!-- PANNELLO 1: FLUSSO DI COMANDI INFINITO BLU/BIANCO/ROSSO -->
+        <!-- PANNELLO MULTI-LOG IPERVELOCE -->
         <div id="terminal-panel">
             <div id="log-wrapper"></div>
         </div>
 
-        <!-- PANNELLO 2: LA SCHEDA DEDICATA FISSA -->
+        <!-- QUADRO CENTRALE DEDICATO A VOI -->
         <div id="profile-panel">
             <div>
-                <div class="header-title">[ BLUE MATRIX CONNECTION ]</div>
+                <div class="header-title">[ TOTAL INTERACTIVE CORE ]</div>
                 
-                <div class="profile-row" style="text-align: center; padding-top: 10px;">
-                    <!-- La vostra scritta speciale unita all'infinito -->
-                    <span class="target-data" style="font-size: 1.8rem; letter-spacing: 1px;">Oliver + Sofia = ∞</span>
+                <div class="profile-row" style="text-align: center; padding-top: 5px;">
+                    <span class="target-data" style="font-size: 2rem; letter-spacing: 1px;">Oliver + Sofia = ∞</span>
                 </div>
                 
                 <div class="profile-row">
@@ -166,24 +194,36 @@
                     <span class="white-text">Hai degli occhietti bellissimi che mi conquistano sempre il cuore. Ti amo.</span>
                 </div>
 
-                <!-- Il grande cuore fisso in codice ASCII Rosso -->
-                <div class="heart-ascii">
-  ***   ***
- ***** *****
-*************
- ***********
-  *********
-   *******
-    *****
-     ***
-      *
+                <!-- BOX ANIMATO DEL CUORE VIVO -->
+                <div class="heart-container">
+                    <div class="heart-ascii">
+    @@@@@@@@@@@@@                @@@@@@@@@@@@@
+  @@@@@@@@@@@@@@@@@@@        @@@@@@@@@@@@@@@@@@@
+ @@@@@@@@@@@@@@@@@@@@@@    @@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+           @@@@@@@@@@@@@@@@@@@@@@@@@@@@
+             @@@@@@@@@@@@@@@@@@@@@@@@
+               @@@@@@@@@@@@@@@@@@@@
+                 @@@@@@@@@@@@@@@@
+                   @@@@@@@@@@@@
+                     @@@@@@@@
+                       @@@@
+                        @@
+                    </div>
                 </div>
             </div>
 
             <div>
                 <div style="border-top: 1px dashed #00a2ff; padding-top: 10px; color: #005588; font-size: 0.8rem;">
-                    SINTONIA HARDWARE: <span class="white-text">CONNESSO ALL'INFINITO</span><br>
-                    COLORE PREFERITO DEL TARGET: <span class="blue-text" style="font-weight: bold; text-shadow: 0 0 5px #00a2ff;">BLU ATTIVO [100%]</span>
+                    MOTORE DINAMICO: <span class="white-text">CUORE IMPULSIVO REAL-TIME</span><br>
+                    STATO RETE: <span class="blue-text" style="font-weight: bold; text-shadow: 0 0 5px #00a2ff;">SINTONIZZATI SULLO STESSO FREQUENZA</span>
                 </div>
             </div>
         </div>
@@ -191,40 +231,84 @@
     </div>
 
     <script>
+        // --- SCRIPT 1: ANIMAZIONE MATRIX DI CUORI SULLO SFONDO ---
+        const canvas = document.getElementById('matrix-bg');
+        const ctx = canvas.getContext('2d');
+
+        function riscalaCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        riscalaCanvas();
+        window.addEventListener('resize', riscalaCanvas);
+
+        const simboli = ["❤️", "💙", "🩵", "♥", "<3", "∞"];
+        const dimensioneFont = 14;
+        const colonne = canvas.width / dimensioneFont;
+        const cadutaY = Array(Math.floor(colonne)).fill(1);
+
+        function disegnaMatrix() {
+            ctx.fillStyle = 'rgba(0, 4, 10, 0.1)'; // Scurisce lo sfondo creando l'effetto scia
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.font = dimensioneFont + 'px Courier New';
+
+            for (let i = 0; i < cadutaY.length; i++) {
+                // Sceglie un simbolo d'amore a caso
+                const testo = simboli[Math.floor(Math.random() * simboli.length)];
+                
+                // Alterna i colori dei cuoricini cadenti tra sfumature di blu e azzurro ciano
+                ctx.fillStyle = Math.random() > 0.85 ? '#ff003c' : (Math.random() > 0.5 ? '#00a2ff' : '#005588');
+
+                const x = i * dimensioneFont;
+                const y = cadutaY[i] * dimensioneFont;
+
+                ctx.fillText(testo, x, y);
+
+                // Quando tocca il fondo, resetta casualmente in alto
+                if (y > canvas.height && Math.random() > 0.975) {
+                    cadutaY[i] = 0;
+                }
+                cadutaY[i]++;
+            }
+        }
+        setInterval(disegnaMatrix, 33); // Velocità dei cuori che cadono nello sfondo
+
+
+        // --- SCRIPT 2: FLUSSO LOG TERMINALE VELOCISSIMO ---
         const wrapper = document.getElementById('log-wrapper');
         const panel = document.getElementById('terminal-panel');
 
-        // Sequenza di avvio iniziale con barre di caricamento azzurre e bianche
         const logIniziali = [
-            { t: "INITIALIZING: Caricamento database sentimentale...", c: "dim-blue" },
-            { t: "CONNECTING: Collegamento ai nodi del cuore... Cerca: Sofia...", c: "blue-text" },
-            { t: "SYS_LOAD: [████░░░░░░░░░░░░░░░░] 20% - Lettura occhietti bellissimi...", c: "blue-text" },
-            { t: "SYS_LOAD: [████████████░░░░░░░░] 60% - Sincronizzazione scuse...", c: "blue-text" },
-            { t: "SYS_LOAD: [████████████████████] 100% - Sentimento pronto.", c: "white-text" },
-            { t: "SUCCESS: Connessione crittografata stabilita con la mia principessa.", c: "white-text" },
+            { t: "SYS_INIT: Lancio motori dinamici a frequenza cardiaca...", c: "dim-blue" },
+            { t: "CONNECTING: Aggancio nodi satellitari di Desio... Target: Sofia.", c: "blue-text" },
+            { t: "FAST_LOAD: [████████░░░░░░░░░░░░] 40% - Lettura sguardi...", c: "blue-text" },
+            { t: "FAST_LOAD: [████████████████████] 100% - Sintonia emotiva totale.", c: "white-text" },
+            { t: "SUCCESS: Backup dei sentimenti completato ed eterno.", c: "white-text" },
             { t: "------------------------------------------------------------------------", c: "dim-blue" },
-            { t: "[!] NOTIFICA DI RETE: Trovata combinazione perfetta ed eterna nei nodi.", c: "white-text" },
-            { t: "[*] LOG ATTIVO: Oliver + Sofia = Infinito", c: "target-data" },
-            { t: "[*] DETTAGLIO: Ti amo immensamente, sei tutto il mio mondo.", c: "target-data" },
+            { t: "[!] EMERGENZA RETE: Battiti accelerati a livelli critici e fuori scala.", c: "white-text" },
+            { t: "[*] ENCRYPT: Oliver + Sofia = Infinito", c: "target-data" },
+            { t: "[*] NOTA STRUTTURATA: Ti amo immensamente, sei la mia negra.", c: "target-data" },
             { t: "------------------------------------------------------------------------", c: "dim-blue" },
-            { t: "MONITORING: Avvio del flusso dati continuo a schermo...", c: "blue-text" }
+            { t: "OVERDRIVE: Lancio dello streaming a cascata iperveloce...", c: "blue-text" }
         ];
 
-        // Stringhe miste che scorreranno all'infinito (Blu, Bianco e Rosso)
         const frasiLoop = [
             "Ti amo sei la mia principessa...",
-            "Hai degli occhietti bellissimi che mi conquistano sempre il cuore. <3",
+            "Hai degli occhietti bellissimi che mi conquistano sempre il cuore. ❤️",
             "Scusa amore mio, il mio sistema pulsa solo per te.",
             "Sei la mia negra, il mio nodo centrale, tutto il mio cuore.",
-            "Oliver + Sofia = Infinito [Sessione sicura e permanente]",
-            " ❤️ ❤️ ❤️ Rilevato battito accelerato nel server centrale ❤️ ❤️ ❤️",
-            "Sincronizzazione baci in corso... [Stato: Inviati ad altissima velocità]",
-            "Ogni singola riga di questo codice blu parla solo di noi due.",
-            "Nessun firewall di questo mondo può fermare quello che provo per te.",
-            "Sei la mia costante fissa e preferita in tutti gli algoritmi.",
-            "Analisi degli occhietti di Sofia: Bellezza fuori da ogni parametro di sistema.",
-            "Flusso d'amore in streaming continuo... [Stato: Fluido / Infinito]",
-            " <3 <3 <3 <3 <3 ABBI CURA DEL MIO CUORE CONNESSO AL TUO <3 <3 <3 <3 <3"
+            "Oliver + Sofia = Infinito [Sessione bloccata e protetta]",
+            " ❤️ ❤️ ❤️ TRASMISSIONE PULSAZIONI CUORE IN CORSO ❤️ ❤️ ❤️",
+            "Sincronizzazione baci eseguiita... [Stato: Inviati ad alta frequenza]",
+            "Ogni singola riga di questo codice corre forte verso di te.",
+            "Nessun firewall al mondo può fermare quello che provo per te.",
+            "Sei la mia variabile fissa in tutti gli algoritmi.",
+            "Analisi occhietti di Sofia: Splendore immenso rilevato.",
+            "Flusso d'amore continuo... [Stato: Perfetto / Overclock attivo]",
+            " ❤️ ❤️ ❤️ SEI ILMIO INDIRIZZO IP PREFERITO DELLA VITA ❤️ ❤️ ❤️",
+            "Invio pacchetto: Ti Amo. Risposta del sistema: Ricevuto.",
+            "Backdoor del cuore aperta solo ed esclusivamente per la mia principessa."
         ];
 
         let index = 0;
@@ -240,46 +324,40 @@
             wrapper.appendChild(riga);
             panel.scrollTop = panel.scrollHeight;
 
-            // Rimuove i log vecchi per non appesantire lo schermo (rimane fluidissimo)
-            if (wrapper.children.length > 100) {
+            if (wrapper.children.length > 120) {
                 wrapper.removeChild(wrapper.firstChild);
             }
         }
 
         function eseguiTerminal() {
             if (index < logIniziali.length) {
-                // Caricamento iniziale
                 scriviRiga(logIniziali[index].t, logIniziali[index].c);
                 index++;
-                setTimeout(eseguiTerminal, 600);
+                setTimeout(eseguiTerminal, 200); 
             } else {
-                // Scorrimento dati dinamico
                 const randomChance = Math.random();
                 
-                if (randomChance > 0.85) {
-                    // Flash Rosso per far risaltare il vostro amore tra le scritte blu
-                    scriviRiga(`[EMERGENCY-HEART] Oliver + Sofia = INFINITO // Ti amo immensamente, scusa.`, "target-data");
-                } else if (randomChance > 0.5) {
-                    // Flash Bianco per i complimenti più luminosi
+                if (randomChance > 0.90) {
+                    scriviRiga(`[HEART-FLOW] Oliver + Sofia = INFINITO // Ti amo principessa mia, scusa per tutto.`, "target-data");
+                } else if (randomChance > 0.65) {
                     const frasiBianche = [
                         "Hai degli occhietti bellissimi che mi conquistano sempre il cuore.",
                         "Scusa amore mio, sei la mia principessa, la mia negra.",
-                        "Ti amo. Ti amo. Ti amo. Ti amo. Ti amo."
+                        "Ti amo. Sei la mia vita. Per sempre.",
+                        "Il mio cuore batte a frequenza supersonica per te."
                     ];
                     scriviRiga(frasiBianche[Math.floor(Math.random() * frasiBianche.length)], "white-text");
                 } else {
-                    // Flusso blu standard stile hacker continuo
                     const fraseCasuale = frasiLoop[Math.floor(Math.random() * frasiLoop.length)];
                     scriviRiga(fraseCasuale, "blue-text");
                 }
 
-                // Velocità di aggiornamento fluida
-                setTimeout(eseguiTerminal, Math.random() * 700 + 350);
+                // Velocità iper-rapida per lo scorrimento (cascata continua)
+                setTimeout(eseguiTerminal, Math.random() * 140 + 60);
             }
         }
 
-        // Avvio automatico
-        setTimeout(eseguiTerminal, 500);
+        setTimeout(eseguiTerminal, 300);
     </script>
 </body>
 </html>
