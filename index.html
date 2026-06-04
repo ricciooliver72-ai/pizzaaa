@@ -1,34 +1,97 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Scherzo</title>
+<title>SYSTEM BREACH</title>
+
 <style>
 body {
   margin: 0;
   background: black;
   overflow: hidden;
+  font-family: monospace;
 }
 
+/* MATRIX */
 canvas {
-  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  opacity: 0.8;
 }
 
+/* GLITCH LAYERS */
+.glitch {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255,0,0,0.03),
+    rgba(0,255,0,0.03),
+    rgba(0,0,255,0.03)
+  );
+  animation: shake 0.08s infinite;
+  z-index: 2;
+}
+
+@keyframes shake {
+  0% { transform: translate(1px,1px); }
+  25% { transform: translate(-1px,1px); }
+  50% { transform: translate(1px,-1px); }
+  75% { transform: translate(-1px,-1px); }
+  100% { transform: translate(1px,1px); }
+}
+
+/* TERMINAL TEXT */
+#terminal {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  width: 90%;
+  color: #00ff00;
+  font-size: 18px;
+  z-index: 3;
+  white-space: pre-line;
+}
+
+/* SKULL */
 #skull {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 120px;
+  transform: translate(-50%,-50%);
+  font-size: 240px;
   display: none;
+  z-index: 5;
   color: white;
-  text-shadow: 0 0 20px red;
+  text-shadow: 0 0 30px red, 0 0 100px red;
+}
+
+/* FLASH */
+#flash {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: red;
+  opacity: 0;
+  z-index: 6;
 }
 </style>
 </head>
+
 <body>
 
 <canvas id="c"></canvas>
+<div class="glitch"></div>
+
+<div id="terminal"></div>
 <div id="skull">💀</div>
+<div id="flash"></div>
+
+<audio id="audio" loop>
+  <source src="https://actions.google.com/sounds/v1/horror/ambient_horror_whispers.ogg" type="audio/ogg">
+</audio>
 
 <script>
 const c = document.getElementById("c");
@@ -37,17 +100,16 @@ const ctx = c.getContext("2d");
 c.width = window.innerWidth;
 c.height = window.innerHeight;
 
-const letters = "01☠☠☠☠☠☠☠";
+const letters = "01☠☠☠☠☠☠☠☠☠☠☠";
 const fontSize = 16;
 const columns = c.width / fontSize;
-
 const drops = Array(Math.floor(columns)).fill(1);
 
 function draw() {
-  ctx.fillStyle = "rgba(0,0,0,0.05)";
+  ctx.fillStyle = "rgba(0,0,0,0.06)";
   ctx.fillRect(0,0,c.width,c.height);
 
-  ctx.fillStyle = "#0F0";
+  ctx.fillStyle = "#00ff00";
   ctx.font = fontSize + "px monospace";
 
   for (let i = 0; i < drops.length; i++) {
@@ -61,11 +123,59 @@ function draw() {
   }
 }
 
-setInterval(draw, 33);
+setInterval(draw, 18);
 
+// TERMINAL EFFECT
+const terminal = document.getElementById("terminal");
+
+const lines = [
+"booting system...",
+"checking device integrity...",
+"scan complete: UNKNOWN DEVICE",
+"location trace: ACTIVE",
+"identity found: SOFIA",
+"warning: unauthorized access detected",
+"injecting monitoring module...",
+"system override: SUCCESS",
+"YOU ARE BEING WATCHED..."
+];
+
+let i = 0;
+
+function typeLine() {
+  if (i < lines.length) {
+    terminal.innerHTML += lines[i] + "\\n";
+    i++;
+    setTimeout(typeLine, 1200);
+  }
+}
+
+setTimeout(typeLine, 1000);
+
+// HORROR SEQUENCE
 setTimeout(() => {
-  document.getElementById("skull").style.display = "block";
-}, 3000);
+
+  const skull = document.getElementById("skull");
+  const flash = document.getElementById("flash");
+  const audio = document.getElementById("audio");
+
+  skull.style.display = "block";
+
+  audio.volume = 1;
+  audio.play().catch(()=>{});
+
+  setInterval(() => {
+    flash.style.opacity = Math.random() > 0.8 ? 1 : 0;
+  }, 60);
+
+}, 9000);
+
+// SCREEN SHAKE
+setInterval(() => {
+  document.body.style.transform =
+    `translate(${Math.random()*4}px,${Math.random()*4}px)`;
+}, 30);
+
 </script>
 
 </body>
