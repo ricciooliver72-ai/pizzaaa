@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TERMINAL ACCESS - SYSTEM STATUS</title>
+    <title>MATRIX CORE - LIVE MONITORING SYSTEM</title>
     <style>
-        /* Impostazioni generali dello schermo stile Hacker */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -13,174 +12,237 @@
         }
 
         body {
-            background-color: #030303;
+            background-color: #020202;
             color: #00ff33;
             font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
             height: 100vh;
-            padding: 30px;
-            font-size: 16px;
+            padding: 20px;
+            font-size: 14px;
         }
 
-        /* Linee orizzontali per simulare un vecchio monitor CRT */
+        /* Effetto schermo CRT / Scanner Vintage */
         body::before {
             content: " ";
             display: block;
             position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
-            z-index: 5;
-            background-size: 100% 3px, 6px 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 10;
+            background-size: 100% 3px, 3px 100%;
             pointer-events: none;
         }
 
-        #terminal {
+        /* Layout a due colonne stile centrale operativa */
+        #main-container {
+            display: flex;
             width: 100%;
             height: 100%;
+            gap: 20px;
+        }
+
+        /* Colonna sinistra: Log scorrimento infinito */
+        #terminal-panel {
+            flex: 1.3;
+            height: 100%;
+            border: 1px solid #00ff33;
+            padding: 15px;
+            background-color: rgba(0, 5, 0, 0.9);
             overflow-y: auto;
-            position: relative;
-            z-index: 1;
+            box-shadow: inset 0 0 15px rgba(0, 255, 51, 0.2);
+        }
+
+        /* Colonna destra: Quadro riassuntivo del bersaglio */
+        #profile-panel {
+            flex: 1;
+            height: 100%;
+            border: 1px solid #ff003c;
+            padding: 20px;
+            background-color: rgba(10, 0, 2, 0.9);
+            box-shadow: 0 0 25px rgba(255, 0, 60, 0.3), inset 0 0 15px rgba(255, 0, 60, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .line {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             white-space: pre-wrap;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
         }
 
-        /* STILE ROSSO LUMINOSO PER I DATI RICHIESTI */
+        .header-title {
+            color: #ff003c;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ff003c;
+            animation: pulse 1s infinite alternate;
+        }
+
+        .profile-row {
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 5px;
+        }
+
+        .label {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        /* Dati caldi evidenziati in rosso neon */
         .target-data {
             color: #ff003c;
             font-weight: bold;
-            text-shadow: 0 0 12px #ff003c, 0 0 5px #ff003c;
+            text-shadow: 0 0 10px #ff003c, 0 0 3px #ff003c;
         }
 
-        .alert-text {
-            color: #ffcc00;
+        .alert-text { color: #ffcc00; }
+        .success-text { color: #00ff33; }
+        .dim-text { color: #006611; }
+
+        @keyframes pulse {
+            from { opacity: 1; text-shadow: 0 0 10px #ff003c; }
+            to { opacity: 0.6; text-shadow: 0 0 2px #ff003c; }
         }
 
-        .success-text {
-            color: #00ff33;
-            text-shadow: 0 0 8px #00ff33;
-        }
-
-        /* Schermata di avviso centrale che appare alla fine */
-        #popup-allerta {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(15, 0, 5, 0.95);
-            border: 2px solid #ff003c;
-            padding: 40px;
-            text-align: center;
-            z-index: 10;
-            box-shadow: 0 0 40px rgba(255, 0, 60, 0.6);
-            width: 85%;
-            max-width: 600px;
-        }
-
-        #popup-allerta h1 {
-            color: #ff003c;
-            font-size: 2.2rem;
-            margin-bottom: 25px;
-            letter-spacing: 3px;
-            animation: lampeggio 0.6s infinite alternate;
-        }
-
-        #popup-allerta p {
-            color: #ffffff;
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-        }
-
-        @keyframes lampeggio {
-            from { opacity: 1; }
-            to { opacity: 0.2; }
-        }
-
-        /* Nasconde la barra di scorrimento standard */
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #00ff33;
-        }
+        /* Personalizzazione barra di scorrimento */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #00ff33; }
     </style>
 </head>
 <body>
 
-    <div id="terminal"></div>
+    <div id="main-container">
+        
+        <div id="terminal-panel" id="terminal">
+            <div id="log-wrapper"></div>
+        </div>
 
-    <div id="popup-allerta">
-        <h1>ATTACCO COMPLETATO</h1>
-        <p>Infiltrazione eseguita nei nodi locali.</p>
-        <p>Soggetto Rintracciato: <span class="target-data">OLGA MINO NORIEGA PATRICIA</span></p>
-        <p>Luogo di Nascita: <span class="target-data">ECUADOR</span></p>
-        <p>Domicilio Attuale: <span class="target-data">DESIO</span></p>
-        <p style="color: #666; font-size: 0.8rem; margin-top: 30px;">[Stato della sessione: Connesso in remoto]</p>
+        <div id="profile-panel">
+            <div>
+                <div class="header-title">[ TARGET PROFILE IDENTIFIED ]</div>
+                
+                <div class="profile-row">
+                    <span class="label">NOME COMPLETO:</span> <br>
+                    <span class="target-data">OLGA MINO NORIEGA PATRICIA</span>
+                </div>
+                
+                <div class="profile-row">
+                    <span class="label">DATA DI NASCITA:</span> <br>
+                    <span class="target-data">27 GIUGNO 1974 (ETÀ: 51 ANNI)</span>
+                </div>
+
+                <div class="profile-row">
+                    <span class="label">LUOGO DI ORIGINE:</span> <br>
+                    <span class="target-data">ECUADOR</span>
+                </div>
+
+                <div class="profile-row">
+                    <span class="label">DOMICILIO CORRENTE:</span> <br>
+                    <span class="target-data">DESIO (MB)</span>
+                </div>
+                
+                <div class="profile-row">
+                    <span class="label">TRATTI FISICI RILEVATI:</span> <br>
+                    <span class="target-data">CARNAGIONE MEDIO-SCURA</span> <br>
+                    <span class="target-data">CAPELLI CASTANO SCURI</span>
+                </div>
+            </div>
+
+            <div>
+                <div style="border-top: 1px dashed #ff003c; padding-top: 10px; color: #aaa; font-size: 0.8rem;">
+                    STATUS: <span class="success-text" style="animation: pulse 0.5s infinite alternate;">INTERCETTAZIONE ATTIVA</span><br>
+                    TRACCIAMENTO PACCHETTI: IN CORSO...
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        const terminal = document.getElementById('terminal');
-        const popupAllerta = document.getElementById('popup-allerta');
+        const wrapper = document.getElementById('log-wrapper');
+        const panel = document.getElementById('terminal-panel');
 
-        // Sequenza dei messaggi della finta violazione
-        const logAttacco = [
-            { testo: "Inizializzazione protocollo di exploit remoto...", attesa: 400 },
-            { testo: "Connessione alla rete anonima TOR superata... 3 nodi attivi.", attesa: 600 },
-            { testo: "Scansione sottorete locale in corso (provincia di Monza e Brianza)...", attesa: 900 },
-            { testo: "Testing vulnerabilità sui nodi regionali...", attesa: 500 },
-            { testo: "Bypassing protocollo di sicurezza WPA3... OK", attesa: 400 },
-            { testo: "Iniezione pacchetti di overlay nel server centrale...", attesa: 700 },
-            { testo: "Intercettazione pacchetti handshake... Decrittazione in corso.", attesa: 800 },
-            { testo: "-------------------------------------------------------------", attesa: 200 },
-            { testo: "[!] NOTIFICA: Trovata corrispondenza esatta nel database locale.", attesa: 500, classe: "alert-text" },
-            { testo: "[*] TARGET IDENTIFICATO: <span class='target-data'>OLGA MINO NORIEGA PATRICIA</span>", attesa: 1000 },
-            { testo: "[*] ORIGINE REGISTRATA: <span class='target-data'>ECUADOR</span>", attesa: 1000 },
-            { testo: "[*] LOCALIZZAZIONE ATTUALE: <span class='target-data'>DESIO</span>", attesa: 1000 },
-            { testo: "-------------------------------------------------------------", attesa: 200 },
-            { testo: "Apertura backdoor sulla porta remota 8080...", attesa: 600 },
-            { testo: "Caricamento script di tracciamento nella cache del browser...", attesa: 700 },
-            { testo: "Sincronizzazione dati in corso: [████████████████████] 100%", attesa: 1200, classe: "success-text" },
-            { testo: "Download dei file di configurazione terminato con successo.", attesa: 400 },
-            { testo: "Rimozione file temporanei e tracce d'accesso (clearev)... PRONTO.", attesa: 600 },
-            { testo: "Generazione resoconto finale dell'intrusione..." , attesa: 1100 }
+        // Blocchi di stringhe iniziali (fase di boot)
+        const logIniziali = [
+            { t: "SYS_INIT: Caricamento moduli di attacco asincroni...", c: "dim-text" },
+            { t: "CONNECTING: Collegamento ai relay TOR decentralizzati...", c: "" },
+            { t: "SUCCESS: Tunnel stabilito su 4 nodi internazionali [ proxy chain attiva ]", c: "success-text" },
+            { t: "SCANNER: Avvio scansione pacchetti nell'area geografica della Brianza...", c: "" },
+            { t: "SEARCHING: Interrogazione anagrafiche locali e database di rete...", c: "" },
+            { t: "------------------------------------------------------------------------", c: "dim-text" },
+            { t: "[!] ALERT: Riscontro positivo rilevato sui server della subnet locale.", c: "alert-text" },
+            { t: "[*] IDENTITÀ ESTRATTA: OLGA MINO NORIEGA PATRICIA", c: "target-data" },
+            { t: "[*] COORDINATE AREA: DESIO (ITALIA) // ORIGINE: ECUADOR", c: "target-data" },
+            { t: "------------------------------------------------------------------------", c: "dim-text" },
+            { t: "EXPLOIT: Sincronizzazione dei dati strutturati e dei tratti somatici...", c: "" },
+            { t: "DATABASE: Aggancio record anagrafico - Nascita: 27/06/1974 (Età calcolata: 51)", c: "success-text" },
+            { t: "PHASE: Iniezione pacchetto invisibile per intercettazione continua...", c: "" }
         ];
 
-        let rigaCorrente = 0;
+        // Frasi dinamiche ripetitive che verranno generate all'infinito per simulare il tracciamento reale
+        const frasiLoop = [
+            "Intercettato pacchetto dati da gateway locale... [Stato: OK]",
+            "Analisi traffico DNS in corso... Nessuna anomalia rilevata.",
+            "Sincronizzazione uplink con il server centrale eseguita.",
+            "Rilevato ping di controllo dal nodo periferico.",
+            "Aggiornamento della cache di tracciamento... [ Buffer pulito ]",
+            "Scansione porte di comunicazione secondarie aperta.",
+            "Verifica integrità della backdoor remota... Risposta in 12ms.",
+            "Filtraggio pacchetti HTTPS completato per l'host selezionato.",
+            "Generazione chiavi di sessione temporanee simmetriche...",
+            "Stato connessione: Stabile. Flusso dati continuo attivo."
+        ];
 
-        function avviaSimulazione() {
-            if (rigaCorrente < logAttacco.length) {
-                const datiRiga = logAttacco[rigaCorrente];
-                const elementoRiga = document.createElement('div');
-                elementoRiga.className = 'line';
-                
-                if (datiRiga.classe) {
-                    elementoRiga.classList.add(datiRiga.classe);
-                }
-                
-                // Genera l'orario reale del computer corrente
-                const orario = new Date().toLocaleTimeString();
-                elementoRiga.innerHTML = `[${orario}] ${datiRiga.testo}`;
-                
-                terminal.appendChild(elementoRiga);
-                terminal.scrollTop = terminal.scrollHeight;
-                
-                rigaCorrente++;
-                setTimeout(avviaSimulazione, datiRiga.attesa);
-            } else {
-                // Al termine, sfoca il terminale e attiva la schermata rossa
-                setTimeout(() => {
-                    terminal.style.filter = "blur(5px)";
-                    popupAllerta.style.display = "block";
-                }, 1200);
+        let index = 0;
+
+        function scriviRiga(testo, classe) {
+            const riga = document.createElement('div');
+            riga.className = 'line';
+            if (classe) riga.classList.add(classe);
+
+            const ora = new Date().toLocaleTimeString();
+            riga.innerHTML = `<span class="dim-text">[${ora}]</span> ${testo}`;
+            
+            wrapper.appendChild(riga);
+            panel.scrollTop = panel.scrollHeight;
+
+            // Se i log superano le 100 righe, cancella la più vecchia per non bloccare il browser
+            if (wrapper.children.length > 100) {
+                wrapper.removeChild(wrapper.firstChild);
             }
         }
 
-        // Avvio automatico dopo 1 secondo
-        setTimeout(avviaSimulazione, 1000);
+        function eseguiTerminal() {
+            if (index < logIniziali.length) {
+                // Esegue i log iniziali finti
+                scriviRiga(logIniziali[index].t, logIniziali[index].c);
+                index++;
+                setTimeout(eseguiTerminal, Math.random() * 600 + 300);
+            } else {
+                // Una volta finiti i log iniziali, inizia a stampare stringhe all'infinito ad intervalli casuali
+                const fraseCasuale = frasiLoop[Math.floor(Math.random() * frasiLoop.length)];
+                
+                // Occasionalmente inserisce una notifica flash per rendere il tutto più dinamico
+                if (Math.random() > 0.8) {
+                    scriviRiga(`[LIVE MONITOR] Monitoraggio costante su nodo: OLGA MINO NORIEGA PATRICIA`, "alert-text");
+                } else {
+                    scriviRiga(fraseCasuale, "dim-text");
+                }
+
+                setTimeout(eseguiTerminal, Math.random() * 1000 + 400);
+            }
+        }
+
+        // Avvia il processo globale
+        setTimeout(eseguiTerminal, 500);
     </script>
 </body>
 </html>
